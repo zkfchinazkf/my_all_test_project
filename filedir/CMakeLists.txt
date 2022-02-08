@@ -93,6 +93,10 @@ target_link_libraries(test_serial
         pthread
         )
 
+add_executable(candcplususe
+        srctest/candcplususe.cpp
+        )
+
 # set_target_properties(Demo ${DIR_SRCS})
 
 # add_executable(Demo ${DIR_SRCS})
