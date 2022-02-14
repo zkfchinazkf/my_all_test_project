@@ -1,0 +1,24 @@
+{
+    "dada":{
+        "type":"int",
+        "value":10
+    },
+    "dd":{
+        "type":"int",
+        "value":100
+    },
+    "cc":{
+        "x":{
+            "type":"float",
+            "value":"0.1"
+        },
+        "y":{
+            "type":"float",
+            "value":"5.3"
+        },
+        "theta":{
+            "type":"float",
+            "value":"90.0"
+        }
+    }
+}

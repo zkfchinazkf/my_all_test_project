@@ -97,6 +97,13 @@ add_executable(candcplususe
         srctest/candcplususe.cpp
         )
 
+add_executable(testjson
+        src/json/jsontest.cpp
+        )
+
+add_executable(chronodemo
+        src/chronodemo.cpp
+        )
 # set_target_properties(Demo ${DIR_SRCS})
 
 # add_executable(Demo ${DIR_SRCS})
