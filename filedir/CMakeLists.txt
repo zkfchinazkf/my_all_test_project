@@ -104,6 +104,9 @@ add_executable(testjson
 add_executable(chronodemo
         src/chronodemo.cpp
         )
+add_executable(staticregister
+        src/staticregister.cpp
+        )
 # set_target_properties(Demo ${DIR_SRCS})
 
 # add_executable(Demo ${DIR_SRCS})
