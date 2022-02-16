@@ -48,7 +48,7 @@ aux_source_directory(src DIR_SRCS)
 add_definitions(-DTESTDATA="this is the test node")
 
 
-add_executable(Demo
+add_executable(Demo         #all demo
         src/youhua.cpp
         )
 target_link_libraries(Demo
@@ -57,7 +57,7 @@ target_link_libraries(Demo
         rt
         )
 
-add_executable(redisdemo
+add_executable(redisdemo    #redis send demo
         src/redisdemo.cpp
         src/json/json.hpp
         )
@@ -65,7 +65,7 @@ target_link_libraries(redisdemo
         hiredis_vip
         )
 
-add_executable(ptrctltest
+add_executable(ptrctltest    #pthread ptrctl fun demo
         src/prctl.cpp
         )
 target_link_libraries(ptrctltest
@@ -73,19 +73,19 @@ target_link_libraries(ptrctltest
         )
         
 
-add_executable(optdemo
+add_executable(optdemo       #cmd args use opt analysis demo
         src/optdemo.cpp
         )
 
-add_executable(test
+add_executable(test           #test cmakelist input define  
         srctest/mytest.cpp
         )
 
-add_executable(myexpect
+add_executable(myexpect       #use to test expect sh
         srctest/expect.cpp
         )
 
-add_executable(test_serial
+add_executable(test_serial    #boostlog serial demo 
         src/serial.cpp
         )
 target_link_libraries(test_serial
@@ -93,20 +93,27 @@ target_link_libraries(test_serial
         pthread
         )
 
-add_executable(candcplususe
+add_executable(candcplususe     #test c and cplusplus fun demo
         srctest/candcplususe.cpp
         )
 
-add_executable(testjson
+add_executable(testjson         #test nlohmann json demo
         src/json/jsontest.cpp
         )
 
-add_executable(chronodemo
+add_executable(chronodemo       #test c++ time fun chrono
         src/chronodemo.cpp
         )
-add_executable(staticregister
+
+add_executable(staticregister   #test static register demo
         src/staticregister.cpp
         )
+
+
+add_executable(Cplusplus       #all c++ test demo
+        src/Cplusplus.cpp
+        )
+
 # set_target_properties(Demo ${DIR_SRCS})
 
 # add_executable(Demo ${DIR_SRCS})

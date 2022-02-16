@@ -26,6 +26,12 @@ class testaddregister    //中转类，用来将静态注册的驱动申请函�
     testaddregister add_create_register##class_name( \
         #class_name,object_register##class_name);
 
+//静态声明函数
+#define DRIVER_DECLARE(class_name)\
+    class_name* object_declare##class_name(std::string device_id){ \
+        return new class_name(device_id); \
+    }
+
 
 class teststr
 {
@@ -49,7 +55,8 @@ class teststr
         }
 };
 
-DRIVER_REGISTER(teststr)
+DRIVER_REGISTER(teststr)  //静态注册
+DRIVER_DECLARE(teststr)   //静态声明
 
 int main(int argc,char **argv)
 {
