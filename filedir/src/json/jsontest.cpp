@@ -2,6 +2,8 @@
 #include "json.hpp"
 #include <fstream>
 #include <string>
+#include <stdio.h>
+#include <unistd.h>
 
 #define FILENAME "../src/json/testfile.txt"
 
@@ -58,5 +60,4 @@ int main(int argc,char **argv)
             }
         }
     }
-
 }

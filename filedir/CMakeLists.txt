@@ -16,6 +16,7 @@ include_directories(src/math)
 include_directories(src/sharedmemory)
 include_directories(src/json)
 
+add_definitions(-DBOOST_LOG_DYN_LINK)
 
 add_library(mymath_lib  
         src/math/mymath.c
@@ -109,9 +110,27 @@ add_executable(staticregister   #test static register demo
         src/staticregister.cpp
         )
 
+add_executable(printfdemo       #all c++ test demo
+        src/printfdemo.cpp
+        )
+        
 
 add_executable(Cplusplus       #all c++ test demo
         src/Cplusplus.cpp
+        )
+
+add_executable(boostlogdemo       #all c++ test demo
+        src/boostlogdemo/boostlogdemo.cpp
+        )
+target_link_libraries(boostlogdemo
+        boost_log
+        boost_log_setup
+        boost_date_time
+        boost_program_options
+        boost_filesystem
+        boost_system
+        boost_serialization
+        pthread
         )
 
 # set_target_properties(Demo ${DIR_SRCS})
