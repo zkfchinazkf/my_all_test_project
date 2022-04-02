@@ -133,6 +133,24 @@ target_link_libraries(boostlogdemo
         pthread
         )
 
+
+add_executable(getclock       #get clock demo
+        src/getclock.cpp
+        )
+   
+add_executable(boostcoroutines2       #get clock demo
+        src/boost/boostcoroutines2.cpp
+        )   
+target_link_libraries(boostcoroutines2
+        boost_context
+        )  
+
+add_executable(boosttest       #get clock demo
+        src/boost/boosttest.cpp
+        )   
+        
+
+
 # set_target_properties(Demo ${DIR_SRCS})
 
 # add_executable(Demo ${DIR_SRCS})

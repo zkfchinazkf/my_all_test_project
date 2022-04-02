@@ -20,5 +20,15 @@
             "type":"float",
             "value":"90.0"
         }
-    }
+    },
+    "qiantao":[
+        {
+            "id":0,
+            "status":true
+        },
+        {
+            "id":1,
+            "status":false
+        }
+    ]
 }
