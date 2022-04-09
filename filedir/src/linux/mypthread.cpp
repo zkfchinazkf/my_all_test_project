@@ -121,81 +121,11 @@ void *pthreadfun2(void *p)
     }
 }
 
-void *pthreadfun3(void *p)
-{
-    pthread_t selfpthread = pthread_self();
-    pthread_attr_t selfattr;
-    int rslt = pthread_getattr_np(selfpthread,&selfattr);
-    if (rslt != 0) {
-        printf("pthreadfun2 pthread_getattr_np is %s\n",strerror(errno));
-    }
-
-    /*pthread inheritance set and get*/
-    int mode = PTHREAD_EXPLICIT_SCHED;
-    int ret = pthread_attr_getinheritsched(&selfattr,&mode);
-    if(ret)
-    {
-        printf("pthread_attr_getinheritsched fail is %s\n",strerror(errno));
-    }
-    mode = PTHREAD_EXPLICIT_SCHED;
-    ret = pthread_attr_setinheritsched(&selfattr, mode);
-    if(ret)
-    {
-        printf("pthread_attr_setinheritsched fail is %s\n",strerror(errno));
-    }
-
-
-    /*pthread pri set and get*/
-    int policy = SCHED_RR;
-    ret = pthread_attr_getschedpolicy(&selfattr, &policy);
-    if(ret)
-    {
-        printf("pthread_attr_getschedpolicy fail is %s\n",strerror(errno));
-    }
-    policy = SCHED_RR;
-    ret = pthread_attr_setschedpolicy(&selfattr, policy);
-    if(ret)
-    {
-        printf("pthread_attr_setschedpolicy fail is %s\n",strerror(errno));
-    }
-
-    /*pthread pri set and get*/
-    sched_param  schparam;
-    schparam.sched_priority = 40;
-    ret = pthread_attr_setschedparam(&selfattr,&schparam);
-    if(ret)
-    {
-        printf("pthread_attr_setschedparam fail is %s\n",strerror(errno));
-    }
-
-    ret = pthread_attr_getschedparam(&selfattr,&schparam);
-    if(ret)
-    {
-        printf("pthread_attr_getschedparam fail is %s\n",strerror(errno));
-    }
-
-
-    int endpoli;
-    sched_param endsch;
-    ret = pthread_attr_getschedpolicy(&selfattr, &endpoli);
-    ret = pthread_attr_getschedparam(&selfattr,&endsch);
-
-   
-    printf("3 pori is %d,getparam is %d\n",endpoli,endsch.sched_priority);
-    while(1)
-    {
-        printf("my pori");
-        sleep(1);
-    }
-}
-
 int main(int argc,char **argv)
 {
     pthread_t pth1,pth2,pth3;
-    pthread_create(&pth1,NULL,pthreadfun3,NULL);
+    pthread_create(&pth1,NULL,pthreadfun,NULL);
     pthread_create(&pth2,NULL,pthreadfun2,NULL);
-    pthread_detach(pth1);
-    pthread_detach(pth2);
     printf("pth1 = %u\n",pth1);
     printf("pth2 = %u\n",pth2);
     while(1);
