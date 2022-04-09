@@ -138,5 +138,28 @@ int main(int argc,char **argv)
     }
     //**********************end********************************
 
+
     
+    std::ifstream   cmd_ifs1(FILENAME);
+    nlohmann::json deletetest1;
+    cmd_ifs1 >> deletetest1;
+    for(auto iter:deletetest1.items())
+    {
+        if(iter.value().is_object())
+        {
+            std::cout<<"key is "<<iter.key();
+            std::cout<<",value is : {";
+            for(auto iterd:iter.value().items())
+            {
+                std::cout<<iterd.key()<<" : ";
+                std::cout<<iterd.value()<<"     ";
+            }
+            std::cout<<"}"<<std::endl;
+        }
+        else 
+        {
+            std::cout<<"key is "<<iter.key();
+            std::cout<<",value is : "<<iter.value()<<std::endl;
+        }
+    }
 }

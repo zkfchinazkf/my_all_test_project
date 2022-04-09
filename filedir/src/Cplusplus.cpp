@@ -84,6 +84,12 @@ class testclass
 };
 /*---------------using typename demo end 1--------------*/
 
+bool retend(int testnum1,int testnum2)
+{
+    std::cout<<"retend"<<std::endl;
+    return testnum1 == testnum2;
+}
+
 int main(int argc,char **argv)
 {
 /*---------------using typename demo start 2--------------*/
@@ -117,10 +123,9 @@ int main(int argc,char **argv)
     mycout<<"hello world"<<std::endl;
 /*---------------define demo end 2--------------*/
 
-
 /*---------------class copy demo start 2--------------*/
     std::vector<classcopytest> classcopytestvec;
-    for(int idx=0;idx<5;idx++)
+    for(int idx=0;idx<2;idx++)
     {
         std::cout<< idx <<":start"<<std::endl;
         classcopytest vectortestself(idx);
@@ -128,6 +133,16 @@ int main(int argc,char **argv)
         std::cout<< idx <<":end"<<std::endl;
     }
 /*---------------class copy demo end 2--------------*/
+
+
+    if(retend(1,2) && retend(1,2));
+
+    int whilecnt=2;
+    do{
+        std::cout<<"test do while break start"<<std::endl;
+        continue;
+        std::cout<<"test do while break end"<<std::endl;
+    }while(whilecnt--);
 
 
     return 0;

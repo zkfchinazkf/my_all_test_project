@@ -150,6 +150,12 @@ add_executable(boosttest       #get clock demo
         )   
         
 
+add_executable(pthreaddemo       #get clock demo
+        src/linux/mypthread.cpp
+        )   
+target_link_libraries(pthreaddemo
+        pthread
+        )  
 
 # set_target_properties(Demo ${DIR_SRCS})
 
