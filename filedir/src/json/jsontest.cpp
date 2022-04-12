@@ -37,7 +37,10 @@ char *typefindus(INTYPE intype)
     {
         case INTYPE::TYPESTRING:
             break;
+        default:
+            break;
     }
+    return NULL;
 }
 
 int main(int argc,char **argv)

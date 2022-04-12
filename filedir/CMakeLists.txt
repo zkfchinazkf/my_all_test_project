@@ -3,6 +3,8 @@ cmake_minimum_required (VERSION 3.16.1)
 # 项目信息
 project (Demo1)
 
+#选择C++11
+set(CMAKE_CXX_STANDARD 11)
 
 if (NOT CHOICE)
     set(CHOICE use)
@@ -58,13 +60,13 @@ target_link_libraries(Demo
         rt
         )
 
-add_executable(redisdemo    #redis send demo
-        src/redisdemo.cpp
-        src/json/json.hpp
-        )
-target_link_libraries(redisdemo
-        hiredis_vip
-        )
+# add_executable(redisdemo    #redis send demo      need hiredis_vip lib
+#         src/redisdemo.cpp
+#         src/json/json.hpp
+#         )
+# target_link_libraries(redisdemo
+#         hiredis_vip
+#         )
 
 add_executable(ptrctltest    #pthread ptrctl fun demo
         src/prctl.cpp
@@ -86,13 +88,13 @@ add_executable(myexpect       #use to test expect sh
         srctest/expect.cpp
         )
 
-add_executable(test_serial    #boostlog serial demo 
-        src/serial.cpp
-        )
-target_link_libraries(test_serial
-        boost_serialization
-        pthread
-        )
+# add_executable(test_serial    #boostlog serial demo 
+#         src/serial.cpp
+#         )
+# target_link_libraries(test_serial
+#         boost_serialization
+#         pthread
+#         )
 
 add_executable(candcplususe     #test c and cplusplus fun demo
         srctest/candcplususe.cpp
@@ -116,38 +118,42 @@ add_executable(printfdemo       #all c++ test demo
         
 
 add_executable(Cplusplus       #all c++ test demo
-        src/Cplusplus.cpp
+        src/Cplus/Cplusplus.cpp
         )
 
-add_executable(boostlogdemo       #all c++ test demo
-        src/boostlogdemo/boostlogdemo.cpp
+add_executable(stldemo       #all c++ test demo
+        src/Cplus/stl.cpp
         )
-target_link_libraries(boostlogdemo
-        boost_log
-        boost_log_setup
-        boost_date_time
-        boost_program_options
-        boost_filesystem
-        boost_system
-        boost_serialization
-        pthread
-        )
+
+# add_executable(boostlogdemo       #all c++ test demo
+#         src/boostlogdemo/boostlogdemo.cpp
+#         )
+# target_link_libraries(boostlogdemo
+#         boost_log
+#         boost_log_setup
+#         boost_date_time
+#         boost_program_options
+#         boost_filesystem
+#         boost_system
+#         boost_serialization
+#         pthread
+#         )
 
 
 add_executable(getclock       #get clock demo
         src/getclock.cpp
         )
    
-add_executable(boostcoroutines2       #get clock demo
-        src/boost/boostcoroutines2.cpp
-        )   
-target_link_libraries(boostcoroutines2
-        boost_context
-        )  
+# add_executable(boostcoroutines2       #get clock demo
+#         src/boost/boostcoroutines2.cpp
+#         )   
+# target_link_libraries(boostcoroutines2
+#         boost_context
+#         )  
 
-add_executable(boosttest       #get clock demo
-        src/boost/boosttest.cpp
-        )   
+# add_executable(boosttest       #get clock demo
+#         src/boost/boosttest.cpp
+#         )   
         
 
 add_executable(pthreaddemo       #get clock demo
