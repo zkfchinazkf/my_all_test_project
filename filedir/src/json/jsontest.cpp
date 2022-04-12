@@ -13,6 +13,7 @@
 {"aa",1}  == ["aa",1]
 
 nlohmann::json::json_pointer use to find know path file ,demo can look json_pointer demo
+nlohmann::ordered_json demo can use order json data,demo can look ordered_json demo demo 
 */
 
 enum class INTYPE
@@ -140,8 +141,10 @@ int main(int argc,char **argv)
 
 
     
+    /*                  ordered_json demo                        */
+    //**********************start********************************
     std::ifstream   cmd_ifs1(FILENAME);
-    nlohmann::json deletetest1;
+    nlohmann::ordered_json deletetest1;
     cmd_ifs1 >> deletetest1;
     for(auto iter:deletetest1.items())
     {
@@ -162,4 +165,5 @@ int main(int argc,char **argv)
             std::cout<<",value is : "<<iter.value()<<std::endl;
         }
     }
+    //***********************end*********************************
 }

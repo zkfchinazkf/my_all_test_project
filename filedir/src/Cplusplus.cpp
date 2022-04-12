@@ -3,6 +3,9 @@
 #include <list>
 #include <vector>
 #include <mutex>
+#include <tuple>
+#include <map>
+#include <memory>
 
 
 
@@ -90,6 +93,54 @@ bool retend(int testnum1,int testnum2)
     return testnum1 == testnum2;
 }
 
+class mapemplacetest
+{
+    int m_data1;
+    int m_data2;
+    public:
+        mapemplacetest(int data1,int data2):m_data1(data1),m_data2(data2){};
+        std::string GetString()
+        {
+            return "m_data1=" + std::to_string(m_data1) + ",m_data2=" + std::to_string(m_data2);
+        }
+};
+
+
+class baseclass
+{
+    baseclass*  m_self;
+    public:
+        std::list<baseclass *> mbaselist;
+        int         m_basenum;
+        baseclass(int basenum):m_basenum(basenum)
+        {
+            m_self = this;
+            mbaselist.push_back(m_self);
+        }
+        virtual std::string fcoutdata() = 0;
+};
+
+class fclass:public baseclass
+{
+    std::string m_name;
+    public:
+        fclass(std::string name,int basenum):baseclass(basenum),m_name(name){};
+        std::string fcoutdata()
+        {
+            return "m_name=" + m_name + ",m_basenum=" + std::to_string(m_basenum);
+        }
+};
+class fclassage:public baseclass
+{
+    std::string m_age;
+    public:
+        fclassage(std::string age,int basenum):baseclass(basenum),m_age(age){};
+        std::string fcoutdata()
+        {
+            return "m_age=" + m_age + ",m_basenum=" + std::to_string(m_basenum);
+        }
+};
+
 int main(int argc,char **argv)
 {
 /*---------------using typename demo start 2--------------*/
@@ -135,7 +186,7 @@ int main(int argc,char **argv)
 /*---------------class copy demo end 2--------------*/
 
 
-    if(retend(1,2) && retend(1,2));
+    if(retend(2,2) && retend(1,2));
 
     int whilecnt=2;
     do{
@@ -144,6 +195,32 @@ int main(int argc,char **argv)
         std::cout<<"test do while break end"<<std::endl;
     }while(whilecnt--);
 
+    
+    std::map<std::string,mapemplacetest> mymap;
+    mymap.insert({"key",mapemplacetest(1,2)});
+    std::cout<<mymap.at("key").GetString()<<std::endl;
+    mymap.emplace(std::piecewise_construct,std::forward_as_tuple("emp"),std::forward_as_tuple(2,3));
+    std::cout<<mymap.at("emp").GetString()<<std::endl;
+
+    //need virtual fun
+    std::list<std::shared_ptr<baseclass>> alllist;
+    std::shared_ptr<fclass> fdata =std::make_shared<fclass>("zkf",24);
+    std::shared_ptr<fclassage> dd =std::make_shared<fclassage>("32",12);
+    alllist.push_back(fdata);
+    alllist.push_back(dd);
+    for(auto &iter:alllist)
+    {
+        // std::cout<< iter->m_basenum <<std::endl;
+        auto ret =  std::dynamic_pointer_cast<fclass>(iter);
+        if(ret != nullptr)
+        {
+            std::cout<< ret->fcoutdata() <<std::endl;
+        }
+        else 
+        {
+            std::cout<<"ret == nullptr"<<std::endl;
+        }
+    }
 
     return 0;
 }

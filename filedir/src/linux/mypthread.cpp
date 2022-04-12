@@ -7,7 +7,10 @@
 
 /*
     1.test pthread sched_priority and sched_mode demo,pthread priority set,set need use root
-
+    SCHED_OTHER(0)：分时调度策略，线程默认调度策略，不区分优先级，该调度方式通过分时来完成的。当线程处于这种调度策略的时候，对线程进行优先级设置会失败。但高优先级的线程可以抢占处于该调度策略的线程。
+    SCHED_FIFO(1)：实时调度策略，先进先出原则，这种调度方式有优先级之分，并且无时间片概念，处于该调度策略时，高优先级的进程将会一直占用CPU 直到有更高优先级的线程出现，将线程设置为该调度策略的时候需要超级用户模式。
+    SCHED_RR(2)：实时调度策略，在SCHED_FIFO的基础上加入了时间片。于FIFO 不同，FIFO 即使有相同优先级的线程，也必须等到当前线程运行完毕后才能执行，RR可以使 相同优先级的线程都运行一段时间。
+    SCHED_FIFO,SCHED_RR 优先级 1 - 99  越大优先级越高
 */
 
 /*-------test pthread sched_priority and sched_mode demo 1-------------*/
