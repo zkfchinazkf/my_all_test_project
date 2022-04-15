@@ -169,4 +169,16 @@ int main(int argc,char **argv)
         }
     }
     //***********************end*********************************
+
+    
+    nlohmann::ordered_json dumpdata;
+    {
+        dumpdata["name"] = "zkf";
+        dumpdata["time"] = "120200";
+        dumpdata["tick"] = "ccc11";
+        dumpdata["content"] = "ccczzz";
+    }
+    std::cout<<dumpdata.dump()<<std::endl;
+    std::cout<<dumpdata.dump(2)<<std::endl;  //dump( " " length,is 2 ,the result will add two ' ')
+    std::cout<<dumpdata.dump(10)<<std::endl;
 }

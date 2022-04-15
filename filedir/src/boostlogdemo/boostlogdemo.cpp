@@ -12,6 +12,7 @@
 #include <boost/format.hpp>
 #include <condition_variable>
 #include <boost/phoenix.hpp>
+#include <boost/log/utility/manipulators/add_value.hpp>
 
 
 // #include <boost/smart_ptr/shared_ptr.hpp>
@@ -128,13 +129,13 @@ class kubot_severity_level_formatter_factory : public logging::basic_formatter_f
 public:
     formatter_type  create_formatter(logging::attribute_name const &name, args_map const &args)
     {
-		// auto test=args.find("data");
-		// for(auto testiter:args)
-		// {
-		// 	std::cout<<"first="<<testiter.first<<std::endl;
-		// 	std::cout<<"second="<<testiter.second<<std::endl;
-		// }
-		// std::cout<<"name="<<name.string()<<std::endl;
+		auto test=args.find("data");
+		for(auto testiter:args)
+		{
+			std::cout<<"first="<<testiter.first<<std::endl;
+			std::cout<<"second="<<testiter.second<<std::endl;
+		}
+		std::cout<<"name="<<name.string()<<std::endl;
 
 
         args_map::const_iterator it = args.find("format");
@@ -177,8 +178,8 @@ int main(int argc,char **argv)
 	BOOST_LOG_TRIVIAL(error)<<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
 	BOOST_LOG_SEV(lg,info)<<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
 
-	BOOST_LOG_SEV(moduleOneLogger,info)<<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
-	BOOST_LOG_SEV(moduleTwoLogger,info)<<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
+	BOOST_LOG_SEV(moduleOneLogger,info) << boost::log::add_value("zkf", "zcd")<<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
+	BOOST_LOG_SEV(moduleTwoLogger,info) <<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
 
 	int cnt;
 
