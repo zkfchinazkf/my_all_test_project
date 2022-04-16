@@ -14,6 +14,9 @@
 
 nlohmann::json::json_pointer use to find know path file ,demo can look json_pointer demo
 nlohmann::ordered_json demo can use order json data,demo can look ordered_json demo demo 
+nlohmann::json and nlohmann::ordered_json difference
+nlohmann::json.contain(path(empty string)) will is true ,and at(empty path) will get all jsondata
+nlohmann::ordered_json.contain(path(empty string)) will is false  
 */
 
 enum class INTYPE
