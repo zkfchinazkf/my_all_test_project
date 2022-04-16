@@ -178,8 +178,9 @@ int main(int argc,char **argv)
 	BOOST_LOG_TRIVIAL(error)<<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
 	BOOST_LOG_SEV(lg,info)<<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
 
-	BOOST_LOG_SEV(moduleOneLogger,info) << boost::log::add_value("zkf", "zcd")<<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
-	BOOST_LOG_SEV(moduleTwoLogger,info) <<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
+
+	BOOST_LOG_SEV(moduleOneLogger,info) <<"[" <<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
+	BOOST_LOG_SEV(moduleTwoLogger,info) << boost::log::add_value("Tag", "zcd")<<FILENAME(__FILE__)<<":"<<__LINE__<<"]"<<"testfile";
 
 	int cnt;
 

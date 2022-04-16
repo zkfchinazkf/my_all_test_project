@@ -181,4 +181,45 @@ int main(int argc,char **argv)
     std::cout<<dumpdata.dump()<<std::endl;
     std::cout<<dumpdata.dump(2)<<std::endl;  //dump( " " length,is 2 ,the result will add two ' ')
     std::cout<<dumpdata.dump(10)<<std::endl;
+
+
+
+    nlohmann::json pointjsontest = 
+    {{
+        "home", 
+        {{"application",100}}
+    }};
+    nlohmann::ordered_json pointorderjsontest = 
+    {{
+        "home", 
+        {{"application",100}}
+    }};
+    std::string pathstr="@";
+    pathstr=pathstr.substr(1);
+    if(pathstr.empty())
+    {
+        std::cout<<"pathstr.empty()"<<std::endl;
+    }
+    else 
+    {
+        std::cout<<"pathstr no empty()"<<std::endl;
+    }
+    nlohmann::json::json_pointer mypath(pathstr);
+    if(pointjsontest.contains(mypath))
+    {
+        std::cout<<"pointjsontest.contains ,and data is :"<<pointjsontest.at(mypath)<<std::endl;
+    }
+    else
+    {
+        std::cout<<"pointjsontest is no contains "<<std::endl;
+    }
+    if(pointorderjsontest.contains(mypath))
+    {
+        std::cout<<"pointorderjsontest.contains ,and data is :"<<pointorderjsontest.at(mypath)<<std::endl;
+    }
+    else
+    {
+        std::cout<<"pointorderjsontest is no contains "<<std::endl;
+    }
+
 }
