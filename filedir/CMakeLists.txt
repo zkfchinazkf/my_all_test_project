@@ -115,7 +115,6 @@ add_executable(staticregister   #test static register demo
 add_executable(printfdemo       #all c++ test demo
         src/printfdemo.cpp
         )
-        
 
 add_executable(Cplusplus       #all c++ test demo
         src/Cplus/Cplusplus.cpp
@@ -123,6 +122,10 @@ add_executable(Cplusplus       #all c++ test demo
 
 add_executable(stldemo       #all c++ test demo
         src/Cplus/stl.cpp
+        )
+
+add_executable(normaldemo       #all c++ test demo
+        src/Cplus/normal.cpp
         )
 
 # add_executable(boostlogdemo       #all c++ test demo
