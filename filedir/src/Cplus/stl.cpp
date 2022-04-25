@@ -1,6 +1,15 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <vector>
+#include <numeric>
+
+/*
+std::accumulate(first,end,firstnum,fun(firstnum type  ,first and end type){}) 头文件#include <numeric>  作用：
+                                                           迭代器从first到end进行迭代，firstname作为初值，依次传参执行fun函数
+                                                           demo can look:accumulate demo
+*/
+
 
 class key
 {
@@ -82,5 +91,16 @@ int main(int argc,char **argv)
     useclass myuse("mydatacc","zkf");
     std::string getdata = baseclass::m_all_list.front()->run();
     std::cout<<getdata<<std::endl;
+
+    /*     accumulate demo  */
+    /*-------start----------*/
+    std::vector<int>  numvec;
+    numvec.push_back(3);
+    numvec.push_back(4);
+    numvec.push_back(5);
+    std::string endnum = std::accumulate(numvec.begin(),numvec.end(),std::string("S"),[](std::string a,int b){return a+'-'+std::to_string(b);});
+    std::cout<<"endnum="<<endnum<<std::endl;
+    /*--------end-----------*/
+
     return 0;
 }

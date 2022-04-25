@@ -170,3 +170,9 @@ target_link_libraries(pthreaddemo
 
 # add_executable(Demo ${DIR_SRCS})
 
+add_executable(cdemo       #get clock demo
+        src/C/linuxc.c
+        )   
+target_link_libraries(cdemo
+        readline
+        )  

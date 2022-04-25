@@ -65,6 +65,7 @@
         "cfenv": "cpp",
         "typeindex": "cpp",
         "variant": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "readline.h": "c"
     }
 }

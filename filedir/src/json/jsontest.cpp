@@ -15,7 +15,7 @@
 nlohmann::json::json_pointer use to find know path file ,demo can look json_pointer demo
 nlohmann::ordered_json demo can use order json data,demo can look ordered_json demo demo 
 nlohmann::json and nlohmann::ordered_json difference
-nlohmann::json.contain(path(empty string)) will is true ,and at(empty path) will get all jsondata
+nlohmann::json.contain(path(empty string)) will is true ,and at(empty path) will get all jsondata,is key name has /,need use ~1 repair,~ need ~0 repair 
 nlohmann::ordered_json.contain(path(empty string)) will is false  
 */
 
@@ -227,5 +227,27 @@ int main(int argc,char **argv)
     }
 
     
+    nlohmann::json testother = 
+    {{
+        "home", 
+        {{"/application",100}}
+    }};
+    std::string pathother = "/home/~1application";   //use ~1 repair key name /
+    nlohmann::json::json_pointer    pointerother(pathother);
+    std::cout <<testother.at(pointerother)<<std::endl;
 
+
+    nlohmann::json cc=
+    {
+        {"aa",100},
+        {"cc",200}
+    };
+    nlohmann::json dd=
+    {
+        {"cc",{{"cc","cc"},{"234",234}}},
+        {"dd","dd"},
+        {"ff",nullptr}
+    };
+    cc.merge_patch(dd);
+    std::cout<<"cc="<<cc<<std::endl;
 }
