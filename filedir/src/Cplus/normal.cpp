@@ -44,7 +44,6 @@ class myexpectclass
         }
         myexpectclass()  noexcept      //使得throw出来的错误直接报错，而不会被捕获到 
         {
-            int num=0;
             throw "false";
         }
 };
@@ -64,13 +63,18 @@ class myenabif
             return m_data;
         }
         
+        // template<typename _T>
+        // typename std::enable_if<(std::is_same<_T,_Ty>() == false), _T>::type myenabiftest()
+        // {
+        //     std::cout<<"_T and _Ty no same"<<std::endl;
+        //     return m_data;
+        // }
         template<typename _T>
-        typename std::enable_if<(std::is_same<_T,_Ty>() == false), _T>::type myenabiftest()
+        typename std::enable_if<(true), _T>::type myenabiftest()
         {
-            std::cout<<"_T and _Ty no same"<<std::endl;
+            std::cout<<"all is false"<<std::endl;
             return m_data;
         }
-
 };
 
 template <typename _T1,typename _T2>
@@ -105,7 +109,7 @@ int main(int argc,char **argv)
     //     std::cout<<"myexp2"<<std::endl;   //no catch
     // }
     myenabif<char>  data('c');
-    std::cout << data.myenabiftest<char>()<<std::endl;
+    std::cout << data.myenabiftest<int>()<<std::endl;
 
 
     int num1=100,num2=200;

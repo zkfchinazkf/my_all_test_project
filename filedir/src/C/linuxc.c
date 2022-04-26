@@ -1,44 +1,52 @@
 #include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include <termios.h>
+#include <unistd.h>
+#include <errno.h>
 
-static int readlinefun(int count, int key)
-{
-    printf("count=%d,key=%c\n",count,key);
-}
+#define Getdata(num)     \
+    ({                   \
+        int ret=0;       \
+        if((num>10))     \
+        {                \ 
+            ret=20;      \
+        }                \
+        else             \
+        {                \
+            ret=30;      \
+        }                \
+        "ccc";             \
+    })
 
 int main(int argc,char **argv)
 {
-    rl_bind_key('?',readlinefun);
-    while(1)
+    /*show define return demo*/
+    /*-----------start---------*/
+    int dd = Getdata(2);
+    printf("dd=%d\n",dd);
+    /*-----------end---------*/
+
+
+    struct termios termios_init;
+    struct termios termios_now;
+    int ret=tcgetattr(fileno(stdin),&termios_init);
+    if(ret)
     {
-        char *pget = readline("you need input data is :");
-        if(!strcmp(pget,"get_1"))
-        {
-            printf("get_1 is %d\n",1);
-        }
-        else if(!strcmp(pget,"history"))
-        {
-            
-            free(pget);
-        }
-        else if(!strcmp(pget,"exit"))
-        {
-            free(pget);
-            break;
-        }
-        else 
-        {
-            printf("input fault ,need input new data\n");
-        }
-        add_history(pget);
-        printf("data is %s,history len is %d\n",pget,history_length);
-        free(pget);
+        perror("tcgetattr ");
+        return 1;
     }
-    // rl_bind_key('?',readlinefun);
-    // while(1)
-    // {
-    //     sleep(10);
-    // }
+    termios_now = termios_init;
+    termios_now.c_lflag &= ~ICANON;
+    termios_now.c_lflag &= ~ECHO;
+    termios_now.c_lflag &= ~ISIG;
+    ret=tcsetattr(fileno(stdin),TCSANOW,&termios_now);
+    printf("now input ,but will no show\r\n");
+    sleep(5);
+    tcflush(fileno(stdin),TCIOFLUSH);   //if no clear flush,will show in termios
+    ret=tcsetattr(fileno(stdin),TCSANOW,&termios_init);
+    if(ret)
+    {
+        perror("tcsetattr ");
+        return 1;
+    }
     return 0;
 }

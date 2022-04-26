@@ -66,6 +66,8 @@
         "typeindex": "cpp",
         "variant": "cpp",
         "*.ipp": "cpp",
-        "readline.h": "c"
+        "readline.h": "c",
+        "unistd.h": "c",
+        "errno.h": "c"
     }
 }
