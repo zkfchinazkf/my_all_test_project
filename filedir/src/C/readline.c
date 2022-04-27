@@ -25,7 +25,15 @@ int main(int argc,char **argv)
         }
         else if(!strcmp(pget,"history"))
         {
-            
+            HIST_ENTRY **the_list;
+            the_list = history_list();
+            if(the_list)
+            {
+                for(int idx=0;the_list[idx];idx++)
+                {
+                    printf("%d: %s\r\n",idx + history_base,the_list[idx]->line);
+                }
+            }
             free(pget);
         }
         else if(!strcmp(pget,"exit"))

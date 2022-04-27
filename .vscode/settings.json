@@ -68,6 +68,11 @@
         "*.ipp": "cpp",
         "readline.h": "c",
         "unistd.h": "c",
-        "errno.h": "c"
+        "errno.h": "c",
+        "stdlib.h": "c",
+        "types.h": "c",
+        "un.h": "c",
+        "string.h": "c",
+        "stdio.h": "c"
     }
 }

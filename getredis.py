@@ -22,3 +22,4 @@ while True:
         ostream.write(strdata+'\n')
         time.sleep(0.2)
     ostream.close()
+

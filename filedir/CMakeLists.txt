@@ -183,3 +183,12 @@ add_executable(cdemo       #get clock demo
 target_link_libraries(cdemo
         readline
         )  
+        
+
+add_executable(unixclidemo       #unix client demo
+        src/filedescriptor/af_unixcli.c
+        )   
+        
+add_executable(unixserdemo       #unix server demo
+        src/filedescriptor/af_unixser.c
+)   
