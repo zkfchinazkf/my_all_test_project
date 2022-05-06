@@ -250,4 +250,8 @@ int main(int argc,char **argv)
     };
     cc.merge_patch(dd);
     std::cout<<"cc="<<cc<<std::endl;
+
+    nlohmann::json testempty={};
+    std::cout<<"null dump is "<<testempty.dump()<<std::endl;
+    std::cout<<"null empty is "<<testempty.empty()<<std::endl;
 }
