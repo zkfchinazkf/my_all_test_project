@@ -73,6 +73,9 @@
         "types.h": "c",
         "un.h": "c",
         "string.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "mman.h": "c",
+        "fcntl.h": "c",
+        "socket.h": "c"
     }
 }

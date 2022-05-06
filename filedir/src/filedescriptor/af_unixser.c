@@ -6,6 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <stdlib.h>
 
 #define _GNU_SOURCE 
 /*
@@ -18,7 +19,6 @@
 int read_fd(int fd, int *fd_buf,int fd_num)
 {
     struct msghdr msg;
-    struct iovec iov[1];
     int n;
     int newfd;
 #ifdef HAVE_MSGHDR_MSG_CONTROL
@@ -40,9 +40,8 @@ int read_fd(int fd, int *fd_buf,int fd_num)
     msg.msg_namelen = 0;
     // 设置数据缓冲区
     char ptr;
-    iov[0].iov_base = &ptr;
-    iov[0].iov_len = 1;
-    msg.msg_iov = iov;
+    struct iovec iov={.iov_base=&ptr,.iov_len=1};
+    msg.msg_iov = &iov;
     msg.msg_iovlen = 1;
     // 设置结束，准备接收
     if((n = recvmsg(fd, &msg, 0)) <= 0)
@@ -77,7 +76,7 @@ int read_fd(int fd, int *fd_buf,int fd_num)
         }
         else 
         {
-            printf("message len[%d] if incorrect./n", cmptr->cmsg_len);
+            printf("message len[%ld] if incorrect./n", cmptr->cmsg_len);
         }
         *fd_buf = -1; // descriptor was not passed
     }
@@ -92,7 +91,7 @@ int read_fd(int fd, int *fd_buf,int fd_num)
 
 int main(int argc,char **argv)
 {
-    unlink("mytestfile");
+    unlink("/tmp/mytestfile");
     int ret=socket(AF_UNIX,SOCK_STREAM,0);
     if(ret<0)
     {
@@ -102,12 +101,12 @@ int main(int argc,char **argv)
     int fd=ret;
     struct sockaddr_un myaddrun;
     myaddrun.sun_family = AF_UNIX;
-    strcpy(myaddrun.sun_path,"mytestfile");
-    bind(fd,&myaddrun,sizeof(myaddrun));
+    strcpy(myaddrun.sun_path,"/tmp/mytestfile");
+    bind(fd,(struct sockaddr *)&myaddrun,sizeof(myaddrun));
     listen(fd,2);
     struct sockaddr_un clientaddr;
     int addrlen = sizeof(clientaddr);
-    int clifd = accept(fd,&clientaddr,&addrlen);
+    int clifd = accept(fd,(struct sockaddr *)&clientaddr,&addrlen);
     if( clifd < 0)
     {
         perror("accept:");
@@ -130,6 +129,6 @@ int main(int argc,char **argv)
     close(recfd[1]);
     close(clifd);
     close(fd);
-    unlink("mytestfile");
+    unlink("/tmp/mytestfile");
     return 0;
 }

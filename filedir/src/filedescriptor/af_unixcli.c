@@ -1,3 +1,6 @@
+
+#define _GNU_SOURCE 
+
 #include <stdio.h>
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
@@ -5,13 +8,17 @@
 #include <sys/un.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/syscall.h>
+#include <linux/memfd.h>
+
 
 /*
     AF_UNIX use one by one mode,like tcp ,but only use in local,speed is fast
 */
 
 #define HAVE_MSGHDR_MSG_CONTROL
-
 
 int send_fd(int fd, int *fd_buf ,int fd_num)
 {
@@ -46,11 +53,9 @@ int send_fd(int fd, int *fd_buf ,int fd_num)
     msg.msg_name = NULL;
     msg.msg_namelen = 0;
     // 别忘了设置数据缓冲区，实际上1个字节就够了
-    struct iovec iov[1];
     char ptr;
-    iov[0].iov_base = &ptr;
-    iov[0].iov_len = 1;
-    msg.msg_iov = iov;
+    struct iovec iov={.iov_base=&ptr,.iov_len=1};
+    msg.msg_iov = &iov;
     msg.msg_iovlen = 1;
     return sendmsg(fd, &msg, 0);
 }
@@ -67,7 +72,7 @@ int main(int argc,char **argv)
     int fd =ret;
     struct sockaddr_un myaddrun;
     myaddrun.sun_family = AF_UNIX;
-    strcpy(myaddrun.sun_path,"mytestfile");
+    strcpy(myaddrun.sun_path,"/tmp/mytestfile");
     if(connect(fd,&myaddrun,sizeof(myaddrun)))
     {
         perror("connect");
@@ -78,6 +83,9 @@ int main(int argc,char **argv)
     ftruncate(shmmemfd,0x4000);
     char *datmmap = (char *)mmap(NULL,0x4000, PROT_READ|PROT_WRITE, MAP_SHARED,shmmemfd,0);
     memset(datmmap,0x30,0x4000);
+    unsigned int seals;
+    seals |= F_SEAL_WRITE;
+    fcntl(shmmemfd, F_ADD_SEALS, seals);
 
     int shmmemfdb = memfd_create("shmfa2",0);
     ftruncate(shmmemfdb,0x4000);
