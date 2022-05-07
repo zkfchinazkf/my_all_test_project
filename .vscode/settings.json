@@ -76,6 +76,7 @@
         "stdio.h": "c",
         "mman.h": "c",
         "fcntl.h": "c",
-        "socket.h": "c"
+        "socket.h": "c",
+        "stat.h": "c"
     }
 }

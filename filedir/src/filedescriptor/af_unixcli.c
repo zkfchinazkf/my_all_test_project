@@ -79,13 +79,35 @@ int main(int argc,char **argv)
         return 2;
     }
     
-    int shmmemfd = memfd_create("shmfa1",0);
+    int shmmemfd = memfd_create("shmfa1",MFD_ALLOW_SEALING);
     ftruncate(shmmemfd,0x4000);
     char *datmmap = (char *)mmap(NULL,0x4000, PROT_READ|PROT_WRITE, MAP_SHARED,shmmemfd,0);
-    memset(datmmap,0x30,0x4000);
+    if(datmmap == NULL)
+    {
+        printf("datmmap == NULL\n");
+    }
+    memset(datmmap,'p',0x4000);
+
     unsigned int seals;
-    seals |= F_SEAL_WRITE;
-    fcntl(shmmemfd, F_ADD_SEALS, seals);
+    // seals |= F_SEAL_SEAL;
+    seals |= F_SEAL_SHRINK;
+    seals |= F_SEAL_GROW;
+    seals |= F_SEAL_FUTURE_WRITE;  //open the mmap can change   ,F_SEAL_FUTURE_WRITE no can change
+    ret = fcntl(shmmemfd, F_ADD_SEALS, seals);
+    if(ret)
+    {
+        perror("fcntl");
+    }
+
+    memset(datmmap,'t',0x4000);
+    printf("datmmap[0]=%c\n",datmmap[0]);
+    seals = 0;
+    seals = fcntl(shmmemfd, F_GET_SEALS);
+    if(seals<0)
+    {
+        perror("fcntl get");
+    }
+    printf("seals=%d\n",seals);
 
     int shmmemfdb = memfd_create("shmfa2",0);
     ftruncate(shmmemfdb,0x4000);

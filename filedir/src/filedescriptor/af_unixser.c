@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
@@ -7,8 +9,12 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <stdlib.h>
+#include <signal.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/syscall.h>
+#include <linux/memfd.h>
 
-#define _GNU_SOURCE 
 /*
     AF_UNIX use one by one mode,like tcp ,but only use in local,speed is fast
 */
@@ -88,7 +94,6 @@ int read_fd(int fd, int *fd_buf,int fd_num)
 }
 
 
-
 int main(int argc,char **argv)
 {
     unlink("/tmp/mytestfile");
@@ -117,13 +122,29 @@ int main(int argc,char **argv)
     char ptr;
     read_fd(clifd, recfd,2);
     
-    char *datmmap = (char *)mmap(NULL,0x4000, PROT_READ|PROT_WRITE, MAP_SHARED,recfd[0],0);
-    memset(datmmap,'s',0x4000);
-    munmap(datmmap,0x4000);
+    struct stat stat_buf;
+    fstat(recfd[0],&stat_buf);
 
-    char *datmmap2 = (char *)mmap(NULL,0x4000, PROT_READ|PROT_WRITE, MAP_SHARED,recfd[1],0);
-    memset(datmmap2,'d',0x4000);
-    munmap(datmmap2,0x4000);
+    int seals = fcntl(recfd[0],F_GET_SEALS);
+    if((seals & F_SEAL_WRITE) || (seals & F_SEAL_FUTURE_WRITE))
+    {
+        printf("use seal write or future write\n");
+        char *datmmap = (char *)mmap(NULL,stat_buf.st_size, PROT_READ, MAP_SHARED,recfd[0],0);
+        printf("getdata = %c\n",datmmap[0]);
+        munmap(datmmap,stat_buf.st_size);
+    }
+    else 
+    {
+        printf("no use seal write or future write");
+        char *datmmap = (char *)mmap(NULL,stat_buf.st_size, PROT_READ|PROT_WRITE, MAP_SHARED,recfd[0],0);
+        memset(datmmap,'s',stat_buf.st_size);
+        munmap(datmmap,stat_buf.st_size);
+    }
+
+
+    char *datmmap2 = (char *)mmap(NULL,stat_buf.st_size, PROT_READ|PROT_WRITE, MAP_SHARED,recfd[1],0);
+    memset(datmmap2,'d',stat_buf.st_size);
+    munmap(datmmap2,stat_buf.st_size);
     
     close(recfd[0]);
     close(recfd[1]);
