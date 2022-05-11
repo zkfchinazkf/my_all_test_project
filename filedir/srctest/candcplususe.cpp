@@ -42,6 +42,7 @@ class testclass
             // ctestfun(this->demofun);     //fault
             // ctestfun(myinputfun);        //fault
             ctestfun(demofun2);             //true
+            return 0;
         }
 };
 

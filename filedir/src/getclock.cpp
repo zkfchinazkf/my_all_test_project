@@ -17,6 +17,6 @@ int main(int argc ,char **argv)
 {
     timespec  time1;
     clock_gettime(CLOCK_THREAD_CPUTIME_ID, &time1);  
-    printf("time1.sec=%d,time1.nsec=%d",time1.tv_sec,time1.tv_nsec);
+    printf("time1.sec=%ld,time1.nsec=%ld",time1.tv_sec,time1.tv_nsec);
     return 0;
 }

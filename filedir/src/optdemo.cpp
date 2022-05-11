@@ -4,7 +4,6 @@
 
 int main(int argc,char **argv)
 {
-    int pret ;
     struct option opts[] = {
         {"version",required_argument,NULL,'v'},
         {"help",no_argument,NULL,'h'},

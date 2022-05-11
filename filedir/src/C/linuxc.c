@@ -8,14 +8,14 @@
     ({                   \
         int ret=0;       \
         if((num>10))     \
-        {                \ 
+        {                \
             ret=20;      \
         }                \
         else             \
         {                \
             ret=30;      \
         }                \
-        "ccc";             \
+        ret;             \
     })
 
 int main(int argc,char **argv)
@@ -50,7 +50,7 @@ int main(int argc,char **argv)
         return 1;
     }
 
-    printf(stdout,"dadada");
+    fprintf(stdout,"dadada");
     tcflush(fileno(stdout),TCIOFLUSH);
     fprintf(stdout,"\r\n");
     fflush(stdout);   //将缓冲区的数据输出
