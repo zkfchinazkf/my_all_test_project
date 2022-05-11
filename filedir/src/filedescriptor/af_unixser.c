@@ -16,6 +16,7 @@
 #include <linux/memfd.h>
 
 /*
+    use #include <linux/memfd.h>   need define _GNU_SOURCE in last
     AF_UNIX use one by one mode,like tcp ,but only use in local,speed is fast
 */
 
@@ -126,7 +127,7 @@ int main(int argc,char **argv)
     fstat(recfd[0],&stat_buf);
 
     int seals = fcntl(recfd[0],F_GET_SEALS);
-    if((seals & F_SEAL_WRITE) || (seals & F_SEAL_FUTURE_WRITE))
+    if((seals & F_SEAL_WRITE) || (seals & F_SEAL_FUTURE_WRITE))    //if set write seal ,mmap cannot get write permissions
     {
         printf("use seal write or future write\n");
         char *datmmap = (char *)mmap(NULL,stat_buf.st_size, PROT_READ, MAP_SHARED,recfd[0],0);

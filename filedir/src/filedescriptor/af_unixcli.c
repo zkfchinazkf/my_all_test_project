@@ -15,7 +15,19 @@
 
 
 /*
+    use #include <linux/memfd.h>   need define _GNU_SOURCE in last
+    ***********************************
+    this demo is AF_UNIX send fd demo
+    ***********************************
     AF_UNIX use one by one mode,like tcp ,but only use in local,speed is fast
+    memfd_create   if use flag is MFD_ALLOW_SEALING,use seal mode
+    seal  flag 
+    use fcntl set or get seal flag
+    F_SEAL_SEAL		       cannot change seal flag after set F_SEAL_SEAL
+    F_SEAL_SHRINK		   the file in question cannot be reduced in size
+    F_SEAL_GROW		       the size of the file in question cannot be increased
+    F_SEAL_WRITE		   you cannot modify the contents of the file
+    F_SEAL_FUTURE_WRITE	   get mmap  last can write,after set F_SEAL_FUTURE_WRITE,new mmap cannot write 
 */
 
 #define HAVE_MSGHDR_MSG_CONTROL
@@ -72,7 +84,7 @@ int main(int argc,char **argv)
     int fd =ret;
     struct sockaddr_un myaddrun;
     myaddrun.sun_family = AF_UNIX;
-    strcpy(myaddrun.sun_path,"/tmp/mytestfile");
+    strcpy(myaddrun.sun_path,"/tmp/mytestfile");   
     if(connect(fd,&myaddrun,sizeof(myaddrun)))
     {
         perror("connect");
