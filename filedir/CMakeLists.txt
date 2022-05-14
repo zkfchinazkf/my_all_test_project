@@ -192,3 +192,17 @@ add_executable(unixclidemo       #unix client demo
 add_executable(unixserdemo       #unix server demo
         src/filedescriptor/af_unixser.c
 )   
+
+        
+add_executable(bookplusfirstdemo       #cplusbingxingbook first
+        src/book/cplusbingxing/first.cpp
+)   
+target_link_libraries(bookplusfirstdemo
+        pthread
+        )  
+add_executable(bookplusseconddemo       #cplusbingxingbook second
+        src/book/cplusbingxing/second.cpp
+)   
+target_link_libraries(bookplusseconddemo
+        pthread
+        )  
