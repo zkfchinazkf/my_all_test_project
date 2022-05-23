@@ -77,6 +77,8 @@
         "mman.h": "c",
         "fcntl.h": "c",
         "socket.h": "c",
-        "stat.h": "c"
+        "stat.h": "c",
+        "memfd.h": "c",
+        "syscall.h": "c"
     }
 }

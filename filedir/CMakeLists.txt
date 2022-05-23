@@ -165,7 +165,17 @@ add_executable(pthreaddemo       #get clock demo
 target_link_libraries(pthreaddemo
         pthread
         )  
+add_executable(wriddemo       #get clock demo
+        src/linux/wrid.c
+        )   
+target_link_libraries(wriddemo
+        pthread
+        )  
 
+add_executable(writefifo       #get clock demo
+        src/linux/writefifo.c
+        )  
+        
 # set_target_properties(Demo ${DIR_SRCS})
 
 # add_executable(Demo ${DIR_SRCS})
@@ -185,13 +195,13 @@ target_link_libraries(cdemo
         )  
         
 
-add_executable(unixclidemo       #unix client demo
-        src/filedescriptor/af_unixcli.c
-        )   
+# add_executable(unixclidemo       #unix client demo
+#         src/filedescriptor/af_unixcli.c
+#         )   
         
-add_executable(unixserdemo       #unix server demo
-        src/filedescriptor/af_unixser.c
-)   
+# add_executable(unixserdemo       #unix server demo
+#         src/filedescriptor/af_unixser.c
+# )   
 
         
 add_executable(bookplusfirstdemo       #cplusbingxingbook first
@@ -206,3 +216,4 @@ add_executable(bookplusseconddemo       #cplusbingxingbook second
 target_link_libraries(bookplusseconddemo
         pthread
         )  
+

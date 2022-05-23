@@ -12,8 +12,8 @@
 #include <signal.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <sys/syscall.h>
 #include <linux/memfd.h>
+#include <sys/syscall.h>
 
 /*
     use #include <linux/memfd.h>   need define _GNU_SOURCE in last
