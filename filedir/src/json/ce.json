@@ -1,0 +1,43 @@
+{
+	"regisister":
+	[
+		{
+			"addr":1024,
+			"power":[
+                {"heart_fault"       :0},
+                {"fault_0_triggered" :1},
+                {"fault_1_triggered" :2},
+                {"fault_2_triggered" :3},
+                {"allow_stm32_enb"   :4},
+                {"safety_door_mode"  :5},
+                {"driver_circuit_err":6},
+                {"area_mian"         :8},
+                {"area_tunnel"       :9},
+                {"area_workstation"  :10},
+                {"area_charging"     :11},
+                {"mode_normal"       :12},
+                {"mode_recovery"     :13},
+                {"mode_debug"        :14},
+                {"mode_error"        :15}
+			]
+		},
+		{
+			"addr":3342,
+			"power":[
+                {"chassis_motor_l_overspeed":0},
+                {"chassis_motor_r_overspeed":1},
+                {"lift_motor_overspeed":2},
+                {"robot_moving":3},
+                {"robot_stop":4},
+                {"stop_edge":8},
+                {"stop_top_buttom":9},
+                {"stop_fall":10},
+                {"chassis_l_sto":11},
+                {"chassis_l_dis":12},
+                {"chassis_r_sto":13},
+                {"chassis_r_dis":14},
+                {"req_stm32_lift_sto":15}
+			]
+		}
+	]
+}

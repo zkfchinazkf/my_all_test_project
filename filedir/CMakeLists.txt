@@ -103,7 +103,9 @@ add_executable(candcplususe     #test c and cplusplus fun demo
 add_executable(testjson         #test nlohmann json demo
         src/json/jsontest.cpp
         )
-
+add_executable(readjsonconfig         #test nlohmann json demo
+        src/json/readjsonconfig.cpp
+        )
 add_executable(chronodemo       #test c++ time fun chrono
         src/chronodemo.cpp
         )

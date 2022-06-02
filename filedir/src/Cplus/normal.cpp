@@ -118,7 +118,10 @@ int main(int argc,char **argv)
     changefun1<int &,int &>(num1,num2);
     std::cout<<"num1="<<num1<<",num2="<<num2<<std::endl;
 
-
-
+    std::string strdata;
+    uint8_t addbuf[]={'a','b','c'};
+    for(int idx=0;idx<3;idx++)
+         strdata += addbuf[idx];
+    std::cout<<"str data = "<<strdata<<std::endl;
     return 0;
 };
