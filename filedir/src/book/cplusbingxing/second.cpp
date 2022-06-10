@@ -2,6 +2,9 @@
 #include <thread>
 #include <memory>
 #include <unistd.h>
+#include <vector>
+#include <algorithm>
+#include <functional>
 
 #define  question_1   
 
@@ -73,6 +76,46 @@ void threadmovefun()
     std::cout<<"threadmovefun"<<std::endl;
 }
 
+
+void do_work1()
+{
+    std::cout<<"do_work1 start"<<std::endl;
+    sleep(1);
+    std::cout<<"do_work1 end"  <<std::endl;
+}
+void do_work2()
+{
+    std::cout<<"do_work2 start"<<std::endl;
+    sleep(2);
+    std::cout<<"do_work2 end"  <<std::endl;
+}
+void f()
+{
+    std::thread thread1(do_work1);
+    std::thread thread2(do_work2);
+    std::cout<<"f cc"  <<std::endl;
+    sleep(20);
+    std::cout<<"f ff"  <<std::endl;
+    thread1.join();
+    std::cout<<"f dd"  <<std::endl;
+    thread2.join();
+    std::cout<<"f end"  <<std::endl;
+
+    // std::vector<std::thread> threads;
+    // threads.push_back(std::thread(do_work1)); // 产生线程
+    // threads.push_back(std::thread(do_work2)); // 产生线程
+    // // std::for_each(threads.begin(),threads.end(),
+    // //             std::mem_fn(&std::thread::join)); // 对每个线程调用join()
+    // std::cout<<"f cc"  <<std::endl;
+    // sleep(20);
+    // std::cout<<"f ff"  <<std::endl;
+    // threads[0].join();
+    // std::cout<<"f dd"  <<std::endl;
+    // threads[1].join();
+    // std::cout<<"f end"  <<std::endl;
+
+}
+
 int main(int argc,char **argv)
 {
     int data=100;
@@ -106,5 +149,8 @@ int main(int argc,char **argv)
     std::cout<<"mymovethread2 joinable = "<<mymovethread2.joinable()<<std::endl;
     
     mymovethread2.join();
+
+    f();
+
     return 0;
 }
