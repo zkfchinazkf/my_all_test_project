@@ -79,6 +79,8 @@
         "socket.h": "c",
         "stat.h": "c",
         "memfd.h": "c",
-        "syscall.h": "c"
+        "syscall.h": "c",
+        "signal.h": "c",
+        "filesystem": "cpp"
     }
 }

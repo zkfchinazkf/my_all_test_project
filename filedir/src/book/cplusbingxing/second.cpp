@@ -91,28 +91,28 @@ void do_work2()
 }
 void f()
 {
-    std::thread thread1(do_work1);
-    std::thread thread2(do_work2);
-    std::cout<<"f cc"  <<std::endl;
-    sleep(20);
-    std::cout<<"f ff"  <<std::endl;
-    thread1.join();
-    std::cout<<"f dd"  <<std::endl;
-    thread2.join();
-    std::cout<<"f end"  <<std::endl;
-
-    // std::vector<std::thread> threads;
-    // threads.push_back(std::thread(do_work1)); // 产生线程
-    // threads.push_back(std::thread(do_work2)); // 产生线程
-    // // std::for_each(threads.begin(),threads.end(),
-    // //             std::mem_fn(&std::thread::join)); // 对每个线程调用join()
+    // std::thread thread1(do_work1);
+    // std::thread thread2(do_work2);
     // std::cout<<"f cc"  <<std::endl;
-    // sleep(20);
+    // sleep(3);
     // std::cout<<"f ff"  <<std::endl;
-    // threads[0].join();
+    // thread1.join();
     // std::cout<<"f dd"  <<std::endl;
-    // threads[1].join();
+    // thread2.join();
     // std::cout<<"f end"  <<std::endl;
+
+    std::vector<std::thread> threads;
+    threads.push_back(std::thread(do_work1)); // 产生线程
+    threads.push_back(std::thread(do_work2)); // 产生线程
+    // std::for_each(threads.begin(),threads.end(),
+    //             std::mem_fn(&std::thread::join)); // 对每个线程调用join()
+    std::cout<<"f cc"  <<std::endl;
+    sleep(3);
+    std::cout<<"f ff"  <<std::endl;
+    threads[0].join();
+    std::cout<<"f dd"  <<std::endl;
+    threads[1].join();
+    std::cout<<"f end"  <<std::endl;
 
 }
 
@@ -151,6 +151,8 @@ int main(int argc,char **argv)
     mymovethread2.join();
 
     f();
+
+    std::cout<<std::this_thread::get_id()<<std::endl;
 
     return 0;
 }

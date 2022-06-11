@@ -6,7 +6,7 @@
 
 int main(int argc,char **argv)
 {
-    int fifofd = open("./myddd",O_RDWR|O_CREAT);
+    int fifofd = open("./myddd",O_RDWR|O_CREAT,0777);
     if(fifofd<0)
     {
         perror("fifofd open");

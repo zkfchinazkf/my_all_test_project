@@ -6,10 +6,6 @@ project (Demo1)
 #选择C++11
 set(CMAKE_CXX_STANDARD 11)
 
-if (NOT CHOICE)
-    set(CHOICE use)
-endif()
-
 
 set(MYTESTMESSAGE  "message")
 message("my sysroot is ${MYTESTMESSAGE}")
@@ -32,8 +28,18 @@ add_library(sharedmemory_lib
                 )
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "-std=c++11 -O2  -Wall ${CMAKE_CXX_FLAGS}")
+#     set(CMAKE_CXX_FLAGS "-std=c++11 -O2  -Wall ${CMAKE_CXX_FLAGS}")
 endif(CMAKE_COMPILER_IS_GNUCXX)
+
+
+if(MAKEMODE STREQUAL  "debug")
+        message("now is debug mode")
+        set(CMAKE_CXX_FLAGS "-std=c++11 -rdynamic -g   -Wall ${CMAKE_CXX_FLAGS}")
+        set(CMAKE_C_FLAGS "-g -O2  -Wall ${CMAKE_CXX_FLAGS}")
+else()
+        set(CMAKE_CXX_FLAGS "-std=c++11 -rdynamic   -Wall ${CMAKE_CXX_FLAGS}")
+        set(CMAKE_C_FLAGS " -O2  -Wall ${CMAKE_CXX_FLAGS}")
+endif()
 
 link_directories(
         /usr/local/lib/hiredis-vip
@@ -177,7 +183,11 @@ target_link_libraries(wriddemo
 add_executable(writefifo       #get clock demo
         src/linux/writefifo.c
         )  
-        
+
+add_executable(corefiledemo       #get clock demo
+src/linux/corefile.cpp
+)  
+
 # set_target_properties(Demo ${DIR_SRCS})
 
 # add_executable(Demo ${DIR_SRCS})
@@ -216,6 +226,13 @@ add_executable(bookplusseconddemo       #cplusbingxingbook second
         src/book/cplusbingxing/second.cpp
 )   
 target_link_libraries(bookplusseconddemo
+        pthread
+        )  
+        
+add_executable(bookplusthirddemo       #cplusbingxingbook second
+        src/book/cplusbingxing/third.cpp
+)   
+target_link_libraries(bookplusthirddemo
         pthread
         )  
 

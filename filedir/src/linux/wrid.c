@@ -47,7 +47,7 @@ int main(int argc,char **argv)
 {
     unlink( "./myddd" );
     mkfifo("./myddd",0777);
-    fifofd = open("./myddd",O_RDWR|O_CREAT);
+    fifofd = open("./myddd",O_RDWR|O_CREAT,0777);
     if(fifofd<0)
     {
         perror("fifofd open");
