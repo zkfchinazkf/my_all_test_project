@@ -235,4 +235,11 @@ add_executable(bookplusthirddemo       #cplusbingxingbook second
 target_link_libraries(bookplusthirddemo
         pthread
         )  
+        
+add_executable(bookplusfourdemo       #cplusbingxingbook second
+        src/book/cplusbingxing/four.cpp
+)   
+target_link_libraries(bookplusfourdemo
+        pthread
+        )  
 
