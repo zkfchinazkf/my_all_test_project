@@ -48,37 +48,37 @@ void test_promise_fun()
 
 int main(int argc,char **argv)
 {
-    // std::thread mythread(thread_fun);
-    // std::unique_lock<std::mutex> lk(mytux);
-    // cond_data.wait(lk,[]()->bool{    //构建后会执行一次，后续的话则需要notify_one触发,执行函数期间上锁
-    //         std::cout<<"wait end"<<std::endl;
-    //         return myflag;
-    //     }
-    // );
-    // mythread.join();
+    std::thread mythread(thread_fun);
+    std::unique_lock<std::mutex> lk(mytux);
+    cond_data.wait(lk,[]()->bool{    //构建后会执行一次，后续的话则需要notify_one触发,执行函数期间上锁
+            std::cout<<"wait end"<<std::endl;
+            return myflag;
+        }
+    );
+    mythread.join();
 
-    // std::future<int> myfuture = std::async(std::launch::deferred,asyncfun); //std::launch::deferred：调用wait或者get的时候才执行函数    std::launch::async：表明函数必须在其所在的独立线程上执行
-    // std::cout<<"deferred start"<<std::endl;
-    // std::this_thread::sleep_for(std::chrono::seconds(1));
-    // std::cout<<"deferred end"<<std::endl;
-    // std::cout<<"myfuture.get = "<<myfuture.get()<<std::endl;
+    std::future<int> myfuture = std::async(std::launch::deferred,asyncfun); //std::launch::deferred：调用wait或者get的时候才执行函数    std::launch::async：表明函数必须在其所在的独立线程上执行
+    std::cout<<"deferred start"<<std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout<<"deferred end"<<std::endl;
+    std::cout<<"myfuture.get = "<<myfuture.get()<<std::endl;
 
 
-    // std::cout<<"packaged_task start "<<std::endl;
-    // std::packaged_task<int()> task(asyncfun);
-    // std::this_thread::sleep_for(std::chrono::seconds(1));
-    // std::cout<<"task start "<<std::endl;
-    // std::shared_future<int> runfu_share =  task.get_future().share();     //只将结果返回给runfu，即runfu可通过get在阻塞情况下获取到返回，但不会主动启动线程
-    // std::future<int> runfu =  task.get_future();     //只将结果返回给runfu，即runfu可通过get在阻塞情况下获取到返回，但不会主动启动线程
-    // std::thread testrunfuthread(std::move(task));
+    std::cout<<"packaged_task start "<<std::endl;
+    std::packaged_task<int()> task(asyncfun);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout<<"task start "<<std::endl;
+    std::shared_future<int> runfu_share =  task.get_future().share();     //只将结果返回给runfu，即runfu可通过get在阻塞情况下获取到返回，但不会主动启动线程
+    std::future<int> runfu =  task.get_future();     //只将结果返回给runfu，即runfu可通过get在阻塞情况下获取到返回，但不会主动启动线程
+    std::thread testrunfuthread(std::move(task));
 
-    // std::cout<<"runfu_share.get = " << runfu_share.get()<<std::endl;    //对于 std::future只能调用一次，二次调用会报错   对于 std::shared_future，可多次调用得到返回值  
-    // std::cout<<"runfu_share.get = " << runfu_share.get()<<std::endl;    //如果 runfu 为 std::future ，则此处会抛出异常
-    // assert(runfu_share.valid());
-    // assert(runfu.valid());
-    // runfu.get();
-    // // assert(runfu.valid());   //此时将抛出异常
-    // testrunfuthread.join();
+    std::cout<<"runfu_share.get = " << runfu_share.get()<<std::endl;    //对于 std::future只能调用一次，二次调用会报错   对于 std::shared_future，可多次调用得到返回值  
+    std::cout<<"runfu_share.get = " << runfu_share.get()<<std::endl;    //如果 runfu 为 std::future ，则此处会抛出异常
+    assert(runfu_share.valid());
+    assert(runfu.valid());
+    runfu.get();
+    // assert(runfu.valid());   //此时将抛出异常
+    testrunfuthread.join();
 
 
     std::future<int> promisefuture = testpromise.get_future();
