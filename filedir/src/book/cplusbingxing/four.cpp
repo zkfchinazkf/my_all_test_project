@@ -6,6 +6,8 @@
 #include <future>
 #include <assert.h>
 #include <chrono>
+#include <list>
+#include <algorithm>
 
 //mutable  关键字，可变的，当调用函数被const修饰时，使用mutable关键字后仍可改动该变量的值，如拷贝函数时对const变量的mutex进行上锁
 
@@ -154,5 +156,16 @@ int main(int argc,char **argv)
         std::cout<<"lock fail"<<std::endl;
     }
 
+    std::list<int> mylist;
+    mylist.push_back(25);
+    mylist.push_back(21);
+    mylist.push_back(20);
+    mylist.push_back(33);
+    mylist.push_back(5);
+    auto getret = std::partition(mylist.begin(),mylist.end(),[](int data){return data>20;}); //以第三个判断函数为条件进行分类，返回两个区域的中间值，满足条件的在前
+    std::list<int> mysplicelist;
+    mysplicelist.splice(mysplicelist.begin(),mylist,mylist.begin(),getret);  //将mylist中对应的迭代器位置剪贴到mysplicelist中
+    for(auto iter:mylist)
+        std::cout<<"partition = "<<iter<<std::endl;
     return 0;
 }
