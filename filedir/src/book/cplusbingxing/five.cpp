@@ -4,6 +4,12 @@
 #include <chrono>
 #include <memory>
 
+/*
+memory_order_seq_cst  排序一致模型
+memory_order_acquire  获取(用于读)   memory_order_release   释放（用于写）   memory_order_acq_rel 两者兼有的操作（用于读改写）       获取-释放序列   若获取的值不是最后一个值
+memory_order_relaxed  自由序列  读取到的值不一定是最后一个值，不建议使用
+*/
+
 int main(int argc,char **argv)
 {
     std::atomic_flag f = ATOMIC_FLAG_INIT;
@@ -36,5 +42,36 @@ int main(int argc,char **argv)
     myptr = std::make_shared<int>(30);
     std::atomic_store(&myptrnew,myptr);      //修改值
     std::cout<<"*myptrnew="<<*std::atomic_load(&myptrnew)<<std::endl;  //获取值
+
+    std::atomic<bool> myatomic(false);
+    std::thread myatomicthread(
+        [&]{
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            myatomic.store(true);
+        }
+    );
+
+    while(myatomic.load() == false)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+    std::cout<<"myatomic load == true"<<std::endl;
+    myatomicthread.join();
+
+
+    std::atomic<int> myintatomic(0);
+
+    std::thread myintatomicthread(
+        [&]{
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            myintatomic.store(1,std::memory_order_release);
+            std::cout<<"myintatomic.store"<<std::endl;
+        }
+    );
+    int expect=1;
+    while(myintatomic.compare_exchange_strong(expect,2,std::memory_order_acq_rel) != 0);   //compare_exchange_strong 第一个参数为引用，必须传入变量
+
+    std::cout<<"myintatomic.load="<<myintatomic.load(std::memory_order_acquire)<<std::endl;
+    myintatomicthread.join();
     return 0;
 }
