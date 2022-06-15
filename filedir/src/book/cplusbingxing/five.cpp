@@ -8,6 +8,7 @@
 memory_order_seq_cst  排序一致模型
 memory_order_acquire  获取(用于读)   memory_order_release   释放（用于写）   memory_order_acq_rel 两者兼有的操作（用于读改写）       获取-释放序列   若获取的值不是最后一个值
 memory_order_relaxed  自由序列  读取到的值不一定是最后一个值，不建议使用
+memory_order_consume  数据相关性   使用该内存模式获取的数据是数据相关的，保证指针指向的值是已同步的，并且不需要对其他任何非独立数据施加任何同步要求
 */
 
 int main(int argc,char **argv)
