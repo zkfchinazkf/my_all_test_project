@@ -9,6 +9,16 @@ memory_order_seq_cst  排序一致模型
 memory_order_acquire  获取(用于读)   memory_order_release   释放（用于写）   memory_order_acq_rel 两者兼有的操作（用于读改写）       获取-释放序列   若获取的值不是最后一个值
 memory_order_relaxed  自由序列  读取到的值不一定是最后一个值，不建议使用
 memory_order_consume  数据相关性   使用该内存模式获取的数据是数据相关的，保证指针指向的值是已同步的，并且不需要对其他任何非独立数据施加任何同步要求
+
+实现  更新到最新值后将设定值赋值给当前值
+bool compare_exchange_weak( T& expected, T desired,
+                        std::memory_order success,
+                        std::memory_order failure );
+bool compare_exchange_strong( T& expected, T desired,
+                            std::memory_order success,
+                            std::memory_order failure );
+当前值与期望值(expect)相等时，修改当前值为设定值(desired)，返回true
+当前值与期望值(expect)不等时，将期望值(expect)修改为当前值，返回false
 */
 
 int main(int argc,char **argv)
@@ -70,8 +80,9 @@ int main(int argc,char **argv)
         }
     );
     int expect=1;
-    while(myintatomic.compare_exchange_strong(expect,2,std::memory_order_acq_rel) != 0);   //compare_exchange_strong 第一个参数为引用，必须传入变量
+    while(myintatomic.compare_exchange_strong(expect,3,std::memory_order_acq_rel) != 0);   //compare_exchange_strong 第一个参数为引用，必须传入变量
 
+    std::cout<<"expect="<<expect<<std::endl;
     std::cout<<"myintatomic.load="<<myintatomic.load(std::memory_order_acquire)<<std::endl;
     myintatomicthread.join();
     return 0;
