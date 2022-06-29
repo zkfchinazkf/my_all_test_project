@@ -1,6 +1,7 @@
 #include <iostream>
 #include <atomic>
 #include <memory>
+#include <thread>
 
 /*
 compare_exchange_weak  实现  更新到最新值后将设定值赋值给当前值
@@ -27,7 +28,12 @@ class mylist
     public:
         mylist()
         {
+            std::cout<<"create id:"<<std::this_thread::get_id()<<std::endl;
             head.store(nullptr);   //如果不设置初值，head将不一定为nullptr
+        }
+        ~mylist()
+        {
+            std::cout<<"~id:"<<std::this_thread::get_id()<<std::endl;
         }
         void push(T const new_data)
         {
@@ -44,6 +50,16 @@ class mylist
         }
 };
 
+
+void test_thread_local_fun()
+{
+    thread_local static int mytestlocaldata = 100;
+    static int mytestdata = 100;
+    std::cout<<"mytestlocaldata = "<<mytestlocaldata<<std::endl;
+    std::cout<<"mytestdata = "<<mytestdata<<std::endl;
+    mytestlocaldata = 200;
+    mytestdata = 200;
+}
 
 int main(int argc,char **argv)
 {
@@ -73,6 +89,52 @@ int main(int argc,char **argv)
     {
         std::cout<<"3.mytestlist.pop="<<*ret<<std::endl;
     }
+
+    std::shared_ptr<int> data = nullptr;
+    std::shared_ptr<int> newdata = std::make_shared<int>(100);
+    if(data==nullptr)
+    {
+        std::cout<<"data==nullptr"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"data="<<*data<<std::endl;
+    }
+    if(newdata==nullptr)
+    {
+        std::cout<<"newdata==nullptr"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"newdata="<<*newdata<<std::endl;
+    }
+
+    data.swap(newdata);
+    std::cout<<"swap :"<<std::endl;
+    if(data==nullptr)
+    {
+        std::cout<<"data==nullptr"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"data="<<*data<<std::endl;
+    }
+    if(newdata==nullptr)
+    {
+        std::cout<<"newdata==nullptr"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"newdata="<<*newdata<<std::endl;
+    }
+
+    std::thread  mythread1(test_thread_local_fun);
+    std::thread  mythread2(test_thread_local_fun);
+    mythread1.join();
+    mythread2.join();
+
+    std::thread::id normalid;
+    std::cout<<"id="<<std::thread::id()<<",this id "<<std::this_thread::get_id()<<",normal is ="<<normalid<<std::endl;
 
     return 0;
 }
