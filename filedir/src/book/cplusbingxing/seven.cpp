@@ -7,6 +7,14 @@
 compare_exchange_weak  实现  更新到最新值后将设定值赋值给当前值
 当前值与期望值(expect)相等时，修改当前值为设定值(desired)，返回true
 当前值与期望值(expect)不等时，将期望值(expect)修改为当前值，返回false
+
+
+
+分离引用计数:
+    分为内部和外部计数   
+    外部计数：获取到当前对象的时候加1，消除该对象的时候减一，若成功移除链表，则减二
+    内部计数：用以在外部计数对象被挪动时使用
+    外部计数加内部计数为0时，则消除对象
 */
 
 template<typename T>
@@ -61,8 +69,32 @@ void test_thread_local_fun()
     mytestdata = 200;
 }
 
+void myfuntion()
+{
+    std::cout<<"funclass"<<std::endl;
+}
+
+class funclass
+{
+    std::function<void(void)>      m_func;
+
+    public:
+        funclass():m_func(myfuntion)
+        {}
+        void use_fun()
+        {
+            m_func();
+        }
+
+};
+
+
 int main(int argc,char **argv)
 {
+    std::shared_ptr<bool> some_shared_ptr;
+    std::cout<<"shared_ptr bool free lock is "<<std::atomic_is_lock_free(&some_shared_ptr)<<std::endl;
+    std::atomic<int> bool_atomic_ptr;
+    std::cout<<"bool_atomic_ptr bool free lock is "<<std::atomic_is_lock_free(&bool_atomic_ptr)<<std::endl;
     std::atomic_flag ato_flag;
     ato_flag.test_and_set(std::memory_order_acquire);
     ato_flag.clear(std::memory_order_release);
@@ -135,6 +167,10 @@ int main(int argc,char **argv)
 
     std::thread::id normalid;
     std::cout<<"id="<<std::thread::id()<<",this id "<<std::this_thread::get_id()<<",normal is ="<<normalid<<std::endl;
+
+
+    funclass mytestfun;
+    mytestfun.use_fun();
 
     return 0;
 }
