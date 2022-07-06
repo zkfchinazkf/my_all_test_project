@@ -7,8 +7,12 @@
 compare_exchange_weak  实现  更新到最新值后将设定值赋值给当前值
 当前值与期望值(expect)相等时，修改当前值为设定值(desired)，返回true
 当前值与期望值(expect)不等时，将期望值(expect)修改为当前值，返回false
+第三第四参数为可选参数，分别为成功时使用的内存序和失败时使用的内存序
+
+compare_exchange_strong 同compare_exchange_weak相同
 
 
+release 和 acquire 是为了确保前后变量的先行关系   本身该原子变量的操作依然为原子的
 
 分离引用计数:
     分为内部和外部计数   
@@ -53,7 +57,7 @@ class mylist
         std::shared_ptr<T> pop()
         {
             node *oldnode = head.load();
-            while( oldnode && !head.compare_exchange_weak(oldnode,oldnode->next));
+            while( oldnode && !head.compare_exchange_weak(oldnode,oldnode->next,std::memory_order_release,std::memory_order_relaxed));
             return oldnode ? oldnode->data:nullptr;
         }
 };

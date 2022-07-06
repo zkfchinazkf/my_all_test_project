@@ -10,6 +10,12 @@ memory_order_acquire  获取(用于读)   memory_order_release   释放（用于
 memory_order_relaxed  自由序列  读取到的值不一定是最后一个值，不建议使用
 memory_order_consume  数据相关性   使用该内存模式获取的数据是数据相关的，保证指针指向的值是已同步的，并且不需要对其他任何非独立数据施加任何同步要求
 
+对写入施加 release 语义（store），在代码中这条语句前面的所有读写操作都无法被重排到这个操作之后   unlock
+对读取施加 acquire 语义（load），在代码中这条语句后面所有读写操作都无法重排到这个操作之前        lock
+
+release 和 acquire 是为了确保前后变量的先行关系   本身该原子变量的操作依然为原子的
+
+
 实现  更新到最新值后将设定值赋值给当前值
 bool compare_exchange_weak( T& expected, T desired,
                         std::memory_order success,
