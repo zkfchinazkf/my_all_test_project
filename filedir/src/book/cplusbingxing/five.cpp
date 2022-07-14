@@ -25,6 +25,12 @@ bool compare_exchange_strong( T& expected, T desired,
                             std::memory_order failure );
 当前值与期望值(expect)相等时，修改当前值为设定值(desired)，返回true
 当前值与期望值(expect)不等时，将期望值(expect)修改为当前值，返回false
+
+
+如果值的计算很容易存储，那么使用compare_exchange_weak()能更好的避免一个双重循环的执行，即使compare_exchange_weak()可能会“伪失败”(因此compare_exchange_strong()包含一个循环)。
+另一方面，如果值计算的存储本身是耗时的，那么当期望值不变时，使用compare_exchange_strong()可以避免对值的重复计算
+
+
 */
 
 int main(int argc,char **argv)
