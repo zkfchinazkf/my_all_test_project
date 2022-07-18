@@ -22,6 +22,115 @@ release 和 acquire 是为了确保前后变量的先行关系   本身该原子
     外部计数加内部计数为0时，则消除对象
 */
 
+
+#define THREAD_RISK_POINTER_MAX     100
+struct risk_pointer_data
+{  
+    std::atomic<std::thread::id>   thread_id;
+    std::atomic<void *>            risk_pointer;
+};
+risk_pointer_data  risk_pointer_buff[THREAD_RISK_POINTER_MAX];
+
+class thread_risk_pointer
+{
+    risk_pointer_data  *hp;
+    public:
+        thread_risk_pointer(thread_risk_pointer const &) = delete;
+        thread_risk_pointer operator=(thread_risk_pointer const &) = delete;
+        thread_risk_pointer():hp(nullptr)
+        {
+            int idx=0;
+            for(idx = 0;idx<THREAD_RISK_POINTER_MAX;idx++)
+            {
+                std::thread::id  old_pid; 
+                if(risk_pointer_buff[idx].thread_id.compare_exchange_strong(old_pid,std::this_thread::get_id()))
+                {
+                    hp = &risk_pointer_buff[idx];
+                    break;
+                }
+            }
+            if(idx == THREAD_RISK_POINTER_MAX)
+            {
+                throw "get_thread_risk_pointer fail";
+            }
+        }
+        ~thread_risk_pointer()
+        {
+            hp->risk_pointer.store(nullptr);
+            hp->thread_id.store(std::thread::id());
+        }
+        std::atomic<void*>& get_point()
+        {
+            return hp->risk_pointer;
+        }
+};
+
+
+std::atomic<void *> &get_thread_risk_pointer()
+{
+    thread_local static thread_risk_pointer ret_risk_pointer;
+    return ret_risk_pointer.get_point();
+}
+
+bool get_risk_pointer_usage(void * pointer)
+{
+    for(int idx=0;idx<THREAD_RISK_POINTER_MAX;idx++)
+    {
+        if(risk_pointer_buff[idx].risk_pointer.load() == pointer)    //只在清除待删除链表时使用，即只需判断一次，因为其他线程不能在已弹出且弹出后检查无使用该值后再次指向它
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+template <typename _T>
+void to_delete(void *p)
+{
+    delete static_cast<_T *>(p);
+}
+
+struct data_to_reclaim
+{
+    void*        to_delete_point;
+    std::function<void(void *)> deleter_fun;
+    data_to_reclaim *next = nullptr;
+    template <typename _T>
+    data_to_reclaim(_T delete_point,data_to_reclaim *nex):
+    deleter_fun(to_delete<_T>),
+    to_delete_point(delete_point),
+    next(nex)
+    {}
+    ~data_to_reclaim()
+    {
+        deleter_fun(to_delete_point);
+    }
+};
+
+std::atomic<data_to_reclaim *>   nodes_to_reclaim;
+
+template <typename _T>
+void add_to_delete_reclaim(_T *p)
+{
+    data_to_reclaim *new_point = new data_to_reclaim(p,nodes_to_reclaim.load());
+    while(!nodes_to_reclaim.compare_exchange_weak(new_point->next,new_point));
+}
+
+void clear_all_to_delete_reclaim()
+{
+    data_to_reclaim *clear_head = nodes_to_reclaim.exchange(nullptr);
+    while(clear_head)
+    {
+        data_to_reclaim *temp_head = clear_head->next;
+        if(!get_risk_pointer_usage(clear_head->to_delete_point))
+        {
+            delete clear_head;
+            std::cout<<"get_risk_pointer_usage fail ,clear "<<std::endl;
+        }
+        clear_head = temp_head;
+    }
+}
+
 template<typename T>
 class mystack
 {
@@ -140,6 +249,43 @@ class mystack
 
             return res;
         }
+
+        std::shared_ptr<T> risk_pointer_pop()
+        {
+            std::atomic<void *>& thread_hp = get_thread_risk_pointer();
+            node *oldnode = head.load();
+            node *temp;
+            do
+            {
+                temp = oldnode;
+                thread_hp.store(oldnode);
+                oldnode = head.load();
+            }while(temp != oldnode);
+
+            while( oldnode && !head.compare_exchange_weak(oldnode,oldnode->next,std::memory_order_release,std::memory_order_relaxed));
+
+            thread_hp.store(nullptr);
+
+
+            std::shared_ptr<T> res;
+            if(oldnode)
+            {
+                res.swap(oldnode->data);
+                if(get_risk_pointer_usage(oldnode))
+                {
+                    add_to_delete_reclaim(oldnode);
+                    std::cout<<"add_to_delete_reclaim "<<std::endl;
+                }
+                else 
+                {
+                    delete oldnode;
+                }
+                clear_all_to_delete_reclaim();
+            }
+            
+
+            return res;
+        }
 };
 
 
@@ -226,7 +372,7 @@ int main(int argc,char **argv)
             while(1)
             {
                 mytestlist.push(32);
-                mytestlist.pop();
+                mytestlist.risk_pointer_pop();
             }
         }
     );
@@ -235,7 +381,7 @@ int main(int argc,char **argv)
             while(1)
             {
                 mytestlist.push(44);
-                mytestlist.pop();
+                mytestlist.risk_pointer_pop();
             }
         }
     );
