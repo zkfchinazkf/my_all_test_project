@@ -5,6 +5,9 @@
 #include <list>
 
 /*
+编译报错   undefined reference to `__atomic_compare_exchange_16'   需要在编译时加入库  libatomic.so
+
+
 compare_exchange_weak  实现  更新到最新值后将设定值赋值给当前值
 当前值与期望值(expect)相等时，修改当前值为设定值(desired)，返回true
 当前值与期望值(expect)不等时，将期望值(expect)修改为当前值，返回false
@@ -232,6 +235,7 @@ class mystack
             while(!head.compare_exchange_weak(newnode->next,newnode));
         }
 
+        //引用计数机制实现无锁栈
         std::shared_ptr<T> pop()
         {
             threads_in_pop.fetch_add(1);
@@ -250,6 +254,7 @@ class mystack
             return res;
         }
 
+        //风险指针法实现无锁栈
         std::shared_ptr<T> risk_pointer_pop()
         {
             std::atomic<void *>& thread_hp = get_thread_risk_pointer();
@@ -282,10 +287,84 @@ class mystack
                 }
                 clear_all_to_delete_reclaim();
             }
-            
-
             return res;
         }
+};
+
+
+//检测使用引用计数法实现无锁栈
+template <typename _T>
+struct ext_counter_stack
+{
+    struct node;
+    struct ext_node
+    {
+        int  ext_number;
+        node *ptr = nullptr;
+    };
+    struct node
+    {
+        std::shared_ptr<_T>  m_data;
+        std::atomic<int>     int_number;
+        ext_node             next;
+        node(_T data):m_data(std::make_shared<_T>(data)),int_number(0)
+        {}
+    };
+    std::atomic<ext_node>  head;
+
+
+    void push(_T data)
+    {
+        ext_node newnode;
+        newnode.ptr = new node(data);
+        newnode.ptr->next = head.load();
+        newnode.ext_number = 1;
+        while(!head.compare_exchange_weak(newnode.ptr->next,newnode,std::memory_order_release,std::memory_order_relaxed));
+    }
+
+    void increase_head_count(ext_node &oldhead)
+    {
+        ext_node temphead;
+        do
+        {
+            temphead = oldhead;
+            temphead.ext_number++;
+        } while (!head.compare_exchange_weak(oldhead,temphead,std::memory_order_acquire,std::memory_order_relaxed));
+        oldhead.ext_number = temphead.ext_number;
+    }
+
+    std::shared_ptr<_T>  pop()
+    {
+        ext_node old_head = head.load();
+        while(1)
+        {
+            increase_head_count(old_head);
+            if(!old_head.ptr)
+            {
+                return nullptr;
+            }
+            if(head.compare_exchange_strong(old_head,old_head.ptr->next,std::memory_order_relaxed))   //head ！= oldhead  说明要么外部计数改变，要么有新的数据压入，要么有数据弹出
+            {
+                std::shared_ptr<_T> res;
+                res.swap(old_head.ptr->m_data);
+                old_head.ext_number-=2;
+                if(old_head.ptr->int_number.fetch_add(old_head.ext_number,std::memory_order_release) == -old_head.ext_number)
+                {
+                    // std::cout<<"fetch_add delete "<<std::endl;
+                    delete old_head.ptr;
+                }
+                return res;
+            }
+            else if(old_head.ptr->int_number.fetch_sub(1) == 1)
+            {
+                old_head.ptr->int_number.load(std::memory_order_acquire);//触发该条件时由于使用的是memory_order_relaxed， 
+                                                                        //res.swap(old_head.ptr->data) 未必执行完成，故需要该操作，以同步对ptr的操作
+
+                delete old_head.ptr;
+                // std::cout<<"fetch_sub delete "<<std::endl;
+            }
+        }
+    }
 };
 
 
@@ -351,7 +430,9 @@ int main(int argc,char **argv)
     testdemo aa ;
     aa = dd;
 
-    mystack<int> mytestlist;
+    // mystack<int> mytestlist;
+    ext_counter_stack<int> mytestlist;
+    
     mytestlist.push(100);
     mytestlist.push(200);
     std::shared_ptr<int> ret;
@@ -372,7 +453,8 @@ int main(int argc,char **argv)
             while(1)
             {
                 mytestlist.push(32);
-                mytestlist.risk_pointer_pop();
+                mytestlist.pop();
+                // mytestlist.risk_pointer_pop();
             }
         }
     );
@@ -381,12 +463,26 @@ int main(int argc,char **argv)
             while(1)
             {
                 mytestlist.push(44);
-                mytestlist.risk_pointer_pop();
+                mytestlist.pop();
+                // mytestlist.risk_pointer_pop();
+            }
+        }
+    );
+    std::thread mytestlistfun3(
+        [&]{
+            while(1)
+            {
+                mytestlist.push(55);
+                mytestlist.pop();
+                // mytestlist.risk_pointer_pop();
             }
         }
     );
     mytestlistfun1.join();
     mytestlistfun2.join();
+    mytestlistfun3.join();
+
+
     // std::shared_ptr<int> data = nullptr;
     // std::shared_ptr<int> newdata = std::make_shared<int>(100);
     // if(data==nullptr)

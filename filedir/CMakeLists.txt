@@ -259,6 +259,7 @@ add_executable(bookplussevendemo       #cplusbingxingbook second
 )   
 target_link_libraries(bookplussevendemo
         pthread
+        atomic      
         )      
 
         
