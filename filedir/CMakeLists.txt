@@ -128,6 +128,13 @@ add_executable(Cplusplus       #all c++ test demo
         src/Cplus/Cplusplus.cpp
         )
 
+add_executable(cplusthread       #all c++ test demo
+        src/Cplus/cplusthread.cpp
+        )
+target_link_libraries(cplusthread
+        pthread
+        )
+
 add_executable(stldemo       #all c++ test demo
         src/Cplus/stl.cpp
         )

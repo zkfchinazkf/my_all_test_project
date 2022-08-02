@@ -3,6 +3,7 @@
 #include <memory>
 #include <thread>
 #include <list>
+#include <functional>
 
 /*
 编译报错   undefined reference to `__atomic_compare_exchange_16'   需要在编译时加入库  libatomic.so
