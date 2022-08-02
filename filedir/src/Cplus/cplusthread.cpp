@@ -22,5 +22,16 @@ int main(int argc,char **argv)
 
     mythead.join();
 
+    std::future<int>  newfuture = std::async(std::launch::deferred,[&]()->int{
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::cout<<"async end"<<std::endl;
+        return 100;
+    });   //std::launch::async    异步执行    不需要等到调用get就已执行
+          //std::launch::deferred 同步执行    等到调用get再执行
+        std::cout<<"newfuture start"<<std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    newfuture.get();
+    std::cout<<"newfuture end"<<std::endl;
+
     return 0;
 }
