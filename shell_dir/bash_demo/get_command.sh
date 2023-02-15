@@ -6,9 +6,17 @@
 # **********************************************************************************
 
 
+demofun(){
+    if [ -z $3 ];then   #check input is zero
+        echo $1
+    else 
+        echo $2
+    fi
+}
 
-# data=`demo`
-# echo ${data}
+demofun "no input 3 ,need input" "input 3 ,success"  
+demofun "no input 3 ,need input" "input 3 ,success"  "cc"
+
 sh -c "gcc 1.c"
 ret=$?
 
