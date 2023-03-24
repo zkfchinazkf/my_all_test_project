@@ -128,6 +128,11 @@ add_executable(Cplusplus       #all c++ test demo
         src/Cplus/Cplusplus.cpp
         )
 
+add_executable(static_cpp_demo       #all c++ test demo
+        src/Cplus/static_cpp_demo.cpp
+        src/Cplus/static_cpp_demo.h
+        )
+
 add_executable(cplusthread       #all c++ test demo
         src/Cplus/cplusthread.cpp
         )
