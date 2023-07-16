@@ -83,5 +83,6 @@
         "signal.h": "c",
         "filesystem": "cpp",
         "future": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/zkf/work/gitdir/my_all_test_project/filedir"
 }
